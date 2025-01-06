@@ -170,6 +170,14 @@
     <Compile Include="Migrations\202501021112443_UpdateBirthdates.designer.cs">
       <DependentUpon>202501021112443_UpdateBirthdates.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202501030731555_AddFieldsToMovies.cs" />
+    <Compile Include="Migrations\202501030731555_AddFieldsToMovies.designer.cs">
+      <DependentUpon>202501030731555_AddFieldsToMovies.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202501030735444_AddDataToMovies.cs" />
+    <Compile Include="Migrations\202501030735444_AddDataToMovies.designer.cs">
+      <DependentUpon>202501030735444_AddDataToMovies.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\MembershipType.cs" />
@@ -219,6 +227,7 @@
     <Content Include="Views\Customers\Details.cshtml" />
     <Content Include="Views\Customers\Index.cshtml" />
     <Content Include="Views\Movies\MovieIndex.cshtml" />
+    <Content Include="Views\Movies\MovieDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -263,6 +272,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202501021112443_UpdateBirthdates.resx">
       <DependentUpon>202501021112443_UpdateBirthdates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202501030731555_AddFieldsToMovies.resx">
+      <DependentUpon>202501030731555_AddFieldsToMovies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202501030735444_AddDataToMovies.resx">
+      <DependentUpon>202501030735444_AddDataToMovies.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
