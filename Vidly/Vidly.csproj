@@ -228,6 +228,7 @@
     <Content Include="Views\Customers\Index.cshtml" />
     <Content Include="Views\Movies\MovieIndex.cshtml" />
     <Content Include="Views\Movies\MovieDetails.cshtml" />
+    <Content Include="Views\Customers\New.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
