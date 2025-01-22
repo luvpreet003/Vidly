@@ -14,5 +14,6 @@ namespace Vidly
         // Add DbSet properties for your entities
         public DbSet<Movies> Movies { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<MembershipType> MembershipTypes { get; set; }
     }
 }
