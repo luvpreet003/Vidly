@@ -24,7 +24,7 @@ namespace Vidly.Controllers
             return View(movies);
         }
 
-        public ActionResult EditMovie(int id)
+        public ActionResult Edit(int id)
         {
             var movie = _context.Movies.SingleOrDefault(c => c.Id == id);
             if (movie == null)
@@ -39,25 +39,35 @@ namespace Vidly.Controllers
                 Genre = movie.Genre
             };
 
-            return View("EditMovie",dataObj);
+            var obj = new MovieFormViewModel
+            {
+                Movie = dataObj
+            };
+            
+
+            return View("MovieForm",obj);
         }
 
         [HttpPost]
-        public ActionResult Save(Models.Movies model)
+        public ActionResult Save(MovieFormViewModel model)
         {
-            if (model.Id == 0)
+            if (!ModelState.IsValid)
             {
-                _context.Movies.Add(model);
+                return View("MovieForm", model);
+            }
+
+            if (model.Movie.Id == 0)
+            {
+                _context.Movies.Add(model.Movie);
             }
             else
             {
-                var movie = _context.Movies.SingleOrDefault(x => x.Id == model.Id);
+                var movie = _context.Movies.SingleOrDefault(x => x.Id == model.Movie.Id);
                 if (movie != null)
                 {
-                    movie.Title = model.Title;
-                    movie.DateReleased = model.DateReleased;
-                    movie.PiecesInStock = model.PiecesInStock;
-                    movie.Genre = model.Genre;
+                    movie.Title = model.Movie.Title;
+                    movie.DateReleased = model.Movie.DateReleased;
+                    movie.PiecesInStock = model.Movie.PiecesInStock;
                 }
             }
 
@@ -67,8 +77,11 @@ namespace Vidly.Controllers
 
         public ActionResult New()
         {
-            var movie = new Models.Movies();
-            return View("NewMovie", movie);
+            var obj = new MovieFormViewModel()
+            {
+                Movie = new Models.Movies()
+            };
+            return View("MovieForm",obj);
         }
         public ActionResult Index(int? pageIndex, string sortBy)
         {
