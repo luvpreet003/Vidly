@@ -53,6 +53,7 @@ namespace Vidly.Controllers
                     cust.Name = model.Customer.Name;
                     cust.BirthDate = model.Customer.BirthDate;
                     cust.IsSubscribedToNewsLetter = model.Customer.IsSubscribedToNewsLetter;
+                    cust.MembershipTypeId = model.Customer.MembershipTypeId;
                 }
             }
 
@@ -77,6 +78,7 @@ namespace Vidly.Controllers
             return View("CustomerForm", viewModel);
         }
 
+        [OutputCache(Duration = 0,VaryByParam ="*", NoStore =true)]
         public ViewResult Index()
         {
             return View();

@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using System.Xml.Linq;
 using Vidly.DTOs;
 using Vidly.Models;
 
@@ -27,16 +28,22 @@ namespace Vidly.Controllers.Api
             return Ok(result);
         }
 
-        //GET /api/customers/{id}
         [HttpGet]
-        public IHttpActionResult GetMoviesById(int id)
+        [Route("api/movies")]
+        public IHttpActionResult GetMoviesByTitle([FromUri] string title)
         {
-            var movie = _context.Movies.FirstOrDefault(x => x.Id == id);
-            if (movie == null)
-                return NotFound();
+            if (string.IsNullOrEmpty(title))
+            {
+                return BadRequest("Title parameter is required.");
+            }
 
-            return Ok(Mapper.Map<Movies, MoviesDTO>(movie));
+            var movies = _context.Movies
+                                 .Where(x => x.Title.Contains(title))
+                                 .ToList();
+
+            return Ok(movies);
         }
+
 
         //POST /api/movies
         [HttpPost]

@@ -33,16 +33,16 @@ namespace Vidly.Controllers.Api
             return Ok(customerDtos);
         }
 
-        // GET /api/customers/{id}
+        // GET /api/customers/{name}
         [HttpGet]
-        public IHttpActionResult GetCustomerById(int id)
+        public IHttpActionResult GetCustomerById(string name)
         {
-            var customer = _context.Customers.FirstOrDefault(x => x.Id == id);
+            var customers = _context.Customers
+                           .Where(x => x.Name.Contains(name))
+                           .Select(c => new { c.Name }) // Only return Name property
+                           .ToList();
 
-            if (customer == null)
-                return NotFound();
-
-            return Ok(Mapper.Map<Customer, CustomerDto>(customer));
+            return Ok(customers); // Always return an array, even if empty
         }
 
         //POST /api/customers

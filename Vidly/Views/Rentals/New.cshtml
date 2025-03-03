@@ -1,0 +1,133 @@
+﻿
+@{
+    ViewBag.Title = "New Rental Form";
+}
+
+<h2>New Rental Form</h2>
+
+<form id="newRental">
+    <div class="form-group">
+        <label>Customer</label>
+        <div class="tt-container">
+            <input id="customer" type="text" value="" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Movie</label>
+        <div class="tt-container">
+            <input id="movie" type="text" value="" class="form-control" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <ul id="movies" class="list-group">
+            </ul>
+        </div>
+    </div>
+
+    <button class="btn btn-primary"> Submit</button>
+</form>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var vm = {
+                movieIds: [],
+                customerName: ""
+            };
+
+            var customers = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace("Name"),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: "/api/customers?name=%QUERY",
+                    wildcard: "%QUERY",
+                    transform: function (response) {
+                        if (!Array.isArray(response)) {
+                            console.error("Invalid API response:", response);
+                            return [];
+                        }
+                        return response.map(c => ({ Name: c.Name })); // Ensure the object contains 'Name'
+                    }
+                }
+            });
+
+            customers.initialize();
+
+            $("#customer").typeahead(
+                {
+                    minLength: 3,
+                    highlight: true
+                },
+                {
+                    name: "customers",
+                    display: "Name",
+                    source: customers
+                }
+            ).on("typeahead:select", function (e, customer) {
+                console.log("Selected Customer:", customer);
+                vm.customerName = customer.Name; // Fix: Assign only the Name
+            });
+
+            var movies = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace("Title"),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: "/api/movies?title=%QUERY",
+                    wildcard: "%QUERY",
+                    transform: function (response) {
+                        if (!Array.isArray(response)) {
+                            console.error("Invalid API response:", response);
+                            return [];
+                        }
+                        return response.map(c => ({ Title: c.Title, Id: c.Id })); // Fix: Ensure movie ID is included
+                    }
+                }
+            });
+
+            movies.initialize();
+
+            $("#movie").typeahead(
+                {
+                    minLength: 3,
+                    highlight: true
+                },
+                {
+                    name: "movies",
+                    display: "Title",
+                    source: movies
+                }
+            ).on("typeahead:select", function (e, movie) {
+                console.log("Selected Movie:", movie);
+                $("#movies").append("<li class='list-group-item'>" + movie.Title + "</li>");
+                $("#movie").typeahead("val", "");
+
+                vm.movieIds.push(movie.Id); // Fix: Ensure the correct movie ID is added
+                console.log(vm.movieIds);
+            });
+
+            $("#newRental").submit(function (e) {
+                e.preventDefault();
+
+                console.log("Submitting rental:", vm); // Debugging
+
+                $.ajax({
+                    url: "/api/newRentals",
+                    method: "POST",
+                    contentType: "application/json", // Fix: Ensure correct content type
+                    data: JSON.stringify(vm) // Fix: Convert object to JSON string
+                })
+                    .done(function () {
+                        toastr.success("Rentals successfully added");
+                    })
+                    .fail(function (xhr) {
+                        console.error("Error:", xhr.responseText); // Debugging
+                        toastr.error("Some error occurred: " + xhr.responseText);
+                    });
+            });
+        });
+
+    </script>
+}
+
